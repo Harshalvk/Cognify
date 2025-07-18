@@ -6,12 +6,21 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "tsc": "tsc --noEmit",
+    "format": "prettier \"**/*.{ts,tsx,js,json}\" --ignore-path .gitignore",
+    "format:check": "bun format --check",
+    "format:write": "bun format --write",
+    "validate": "bun format:write && bun lint && bun tsc && bun build",
+    "prepare": "husky install"
   },
   "dependencies": {
+    "@prisma/client": "^6.11.1",
+    "next": "15.3.5",
+    "prettier": "^3.6.2",
+    "prisma": "^6.11.1",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "next": "15.3.5"
+    "react-dom": "^19.0.0"
   },
   "devDependencies": {
     "typescript": "^5",
@@ -22,6 +31,7 @@
     "tailwindcss": "^4",
     "eslint": "^9",
     "eslint-config-next": "15.3.5",
-    "@eslint/eslintrc": "^3"
+    "@eslint/eslintrc": "^3",
+    "husky": "^8.0.0"
   }
 }

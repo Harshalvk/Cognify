@@ -1,0 +1,29 @@
+version: "3.8"
+
+services:
+  cognify-db:
+    container_name: cognify-db
+    image: postgres
+    restart: always
+    ports:
+      - 1140:5432
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    volumes:
+      - cognify-db-volume:/var/lib/postgresql/data
+  pgadmin:
+    container_name: cognify-db_pgadmin
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@email.com
+      PGADMIN_DEFAULT_PASSWORD: password
+    ports:
+      - 1141:80
+    depends_on:
+      - cognify-db
+
+volumes:
+  cognify-db-volume:
