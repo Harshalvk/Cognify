@@ -22,13 +22,11 @@ export async function middleware(request: NextRequest) {
     },
   );
 
-  console.log("SESSION####", session);
-
   if (!session) {
     if (isAuthRoute) {
       return NextResponse.next();
     }
-    return NextResponse.redirect(new URL("/sign-in", request.url));
+    return NextResponse.redirect(new URL("/sign-up", request.url));
   }
 
   if (session) {
@@ -44,5 +42,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/dashboard"], // Apply middleware to specific routes
+  matcher: ["/dashboard", "/sign-in", "/sign-up"], // Apply middleware to specific routes
 };
