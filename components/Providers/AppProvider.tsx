@@ -1,6 +1,7 @@
 import React from "react";
 import { ThemeProvider } from "./ThemeProvider";
 import { Toaster } from "../ui/sonner";
+import { TRPCReactProvider } from "@/trpc/clients/client";
 
 const AppProvider = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -10,7 +11,7 @@ const AppProvider = ({ children }: { children: React.ReactNode }) => {
       enableSystem
       disableTransitionOnChange
     >
-      {children}
+      <TRPCReactProvider>{children}</TRPCReactProvider>
       <Toaster />
     </ThemeProvider>
   );
