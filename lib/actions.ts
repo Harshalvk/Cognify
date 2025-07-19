@@ -5,6 +5,7 @@ import { auth } from "./auth";
 import { APIError } from "better-auth/api";
 import { Resend } from "resend";
 import ForgotPasswordEmail from "@/components/email/ForgotPasswoard";
+import VerifyEmailAddress from "@/components/email/VerifyEmailAddress";
 
 interface State {
   errorMessage?: string | null;
@@ -99,6 +100,30 @@ export async function sendForgotPasswordMail({
       username: username,
       userEmail: useremail,
       resetUrl,
+    }),
+  });
+}
+
+export async function sendVerificationEmailAction({
+  to,
+  subject,
+  verificationUrl,
+  username,
+}: {
+  to: string;
+  subject: string;
+  verificationUrl: string;
+  username: string;
+}) {
+  const resend = new Resend(process.env.RESEND_API_KEY);
+
+  await resend.emails.send({
+    from: "cognify@harshal.xyz",
+    to,
+    subject,
+    react: VerifyEmailAddress({
+      firstName: username,
+      verificationUrl,
     }),
   });
 }

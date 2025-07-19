@@ -2,7 +2,7 @@ import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { prisma } from "@/lib/prisma";
 import { nextCookies } from "better-auth/next-js";
-import { sendForgotPasswordMail } from "./actions";
+import { sendForgotPasswordMail, sendVerificationEmailAction } from "./actions";
 
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {
@@ -23,6 +23,20 @@ export const auth = betterAuth({
       });
     },
     resetPasswordTokenExpiresIn: 3600, // 1hr
+    requireEmailVerification: true,
+  },
+  emailVerification: {
+    sendVerificationEmail: async ({ user, url }) => {
+      await sendVerificationEmailAction({
+        to: user.email,
+        subject: "Verify your email address",
+        username: user.name,
+        verificationUrl: url,
+      });
+    },
+    sendOnSignUp: true,
+    autoSignInAfterVerification: true,
+    expiresIn: 3600,
   },
   socialProviders: {
     github: {
