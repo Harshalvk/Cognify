@@ -54,15 +54,12 @@ function ForgotPasswordForm() {
     values: z.infer<typeof userForgotPasswordFormSchema>,
   ) {
     setIsLoading(true);
-    console.log(values.email);
-    console.log("here 1");
 
     const { data, error } = await forgetPassword({
       email: values.email,
       redirectTo: "/reset-password",
     });
 
-    console.log("here 2");
     if (error) {
       toast.error("email not send");
     } else {
