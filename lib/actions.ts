@@ -3,6 +3,8 @@
 import { redirect } from "next/navigation";
 import { auth } from "./auth";
 import { APIError } from "better-auth/api";
+import { Resend } from "resend";
+import ForgotPasswordEmail from "@/components/email/ForgotPasswoard";
 
 interface State {
   errorMessage?: string | null;
@@ -72,4 +74,31 @@ export async function userSigninAction(prevState: State, formdata: FormData) {
   }
 
   redirect("/dashboard");
+}
+
+export async function sendForgotPasswordMail({
+  to,
+  subject,
+  resetUrl,
+  useremail,
+  username,
+}: {
+  to: string;
+  subject: string;
+  resetUrl: string;
+  username: string;
+  useremail: string;
+}) {
+  const resend = new Resend(process.env.RESEND_API_KEY);
+
+  await resend.emails.send({
+    from: "cognify@harshal.xyz",
+    to,
+    subject,
+    react: ForgotPasswordEmail({
+      username: username,
+      userEmail: useremail,
+      resetUrl,
+    }),
+  });
 }
