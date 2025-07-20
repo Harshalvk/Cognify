@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { resetPassword } from "@/lib/auth-client";
-import { userResetPasswordFormSchema } from "@/validator/user-auth";
+import { userResetPasswordFormSchema } from "@/validator/auth.validator";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";

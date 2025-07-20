@@ -24,7 +24,7 @@ import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { userSignInFormSchema } from "@/validator/user-auth";
+import { userSignInFormSchema } from "@/validator/auth.validator";
 import { signIn } from "@/lib/auth-client";
 import { userSigninAction } from "@/lib/actions";
 import { toast } from "sonner";

@@ -23,7 +23,7 @@ import { Input } from "@/components/ui/input";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { userSignUpFormSchema } from "@/validator/user-auth";
+import { userSignUpFormSchema } from "@/validator/auth.validator";
 import { userSignupAction } from "@/lib/actions";
 import { signIn } from "@/lib/auth-client";
 import { useActionState, useEffect, useState } from "react";
