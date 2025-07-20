@@ -134,7 +134,11 @@ const SignInForm = ({ className, ...props }: React.ComponentProps<"div">) => {
                   <FormItem>
                     <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <Input placeholder="xyz@zyx.com" {...field} />
+                      <Input
+                        disabled={pending}
+                        placeholder="xyz@zyx.com"
+                        {...field}
+                      />
                     </FormControl>
                     <FormDescription>Enter your email address.</FormDescription>
                     <FormMessage />
@@ -158,6 +162,7 @@ const SignInForm = ({ className, ...props }: React.ComponentProps<"div">) => {
                     <FormControl>
                       <div className="relative">
                         <Input
+                          disabled={pending}
                           type={showPassword ? "text" : "password"}
                           {...field}
                         />
@@ -188,7 +193,7 @@ const SignInForm = ({ className, ...props }: React.ComponentProps<"div">) => {
             </form>
           </Form>
           <CardFooter className="mt-3 p-0">
-            <p className="w-full bg-neutral-100 dark:bg-neutral-700 border p-2 rounded-sm text-sm text-center">
+            <p className="w-full bg-muted border p-2 rounded-sm text-sm text-center">
               Don&apos;t have an account?{" "}
               <Link
                 href={"/sign-up"}

@@ -138,7 +138,11 @@ export function SignUpForm({
                   <FormItem>
                     <FormLabel>Name</FormLabel>
                     <FormControl>
-                      <Input placeholder="Harshal" {...field} />
+                      <Input
+                        disabled={pending}
+                        placeholder="Harshal"
+                        {...field}
+                      />
                     </FormControl>
                     <FormDescription>Enter your name.</FormDescription>
                     <FormMessage />
@@ -152,7 +156,11 @@ export function SignUpForm({
                   <FormItem>
                     <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <Input placeholder="xyz@zyx.com" {...field} />
+                      <Input
+                        disabled={pending}
+                        placeholder="xyz@zyx.com"
+                        {...field}
+                      />
                     </FormControl>
                     <FormDescription>Enter your email address.</FormDescription>
                     <FormMessage />
@@ -168,6 +176,7 @@ export function SignUpForm({
                     <FormControl>
                       <div className="relative">
                         <Input
+                          disabled={pending}
                           type={showPassword ? "text" : "password"}
                           {...field}
                         />
@@ -198,7 +207,7 @@ export function SignUpForm({
             </form>
           </Form>
           <CardFooter className="mt-3 p-0">
-            <p className="w-full bg-neutral-100 dark:bg-neutral-700 border p-2 rounded-sm text-sm text-center">
+            <p className="w-full bg-muted border p-2 rounded-sm text-sm text-center">
               Already have an account?{" "}
               <Link
                 href={"/sign-in"}
