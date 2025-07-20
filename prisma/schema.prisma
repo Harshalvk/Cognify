@@ -18,8 +18,13 @@ model User {
   sessions      Session[]
   accounts      Account[]
 
-  Admin    Admin?
-  Reporter Reporter?
+  Admin         Admin?
+  Reporter      Reporter?
+  Feedback      Feedback[]
+  CreditBalance CreditBalance?
+
+  MyEditor        Editor[] @relation("myEditors")
+  FavoriteEditors Editor[] @relation("favoriteEditors")
 
   @@unique([email])
   @@map("user")
@@ -88,4 +93,147 @@ model Reporter {
   updatedAt DateTime @updatedAt
 
   User User @relation(fields: [id], references: [id])
+
+  Article Article[]
+}
+
+model Article {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  title     String
+  body      String
+  summary   String?
+  published Boolean @default(false)
+
+  tags          String[]
+  reporterId    String
+  Reporter      Reporter        @relation(fields: [reporterId], references: [id])
+  Feedback      Feedback[]
+  EditorArticle EditorArticle[]
+}
+
+model Feedback {
+  id        Int          @id @default(autoincrement())
+  createdAt DateTime     @default(now())
+  updateAt  DateTime     @updatedAt
+  uid       String
+  articleId Int
+  user      User         @relation(fields: [uid], references: [id])
+  article   Article      @relation(fields: [articleId], references: [id])
+  type      FeedbackType
+
+  @@unique([uid, articleId])
+}
+
+enum FeedbackType {
+  LOVE
+  LIKE
+  DISLIKE
+  HATE
+}
+
+model CreditBalance {
+  id        Int      @id @default(autoincrement())
+  userId    String   @unique
+  balance   Float    @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Transaction Transaction[]
+}
+
+model Transaction {
+  id              Int      @id @default(autoincrement())
+  userId          String
+  notes           String?
+  amount          String
+  inputTokens     Int      @default(0)
+  outputTokens    Int      @default(0)
+  createdAt       DateTime @default(now())
+  creditBalanceId Int
+
+  CreditBalance CreditBalance @relation(fields: [creditBalanceId], references: [id], onDelete: Cascade)
+}
+
+model Editor {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updateAt  DateTime @updatedAt
+
+  name           String
+  imagePublicId  String?
+  language       Language       @default(ENGLISH)
+  style          Style
+  verbosity      Verbosity
+  wordComplexity WordComplexity
+
+  additionalNotes String?
+  userId          String
+
+  User        User   @relation("myEditors", fields: [userId], references: [id], onDelete: Cascade)
+  FavoritedBy User[] @relation("favoriteEditors")
+
+  EditorArticles EditorArticle[]
+}
+
+model EditorArticle {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  title   String
+  body    String
+  summary String?
+
+  editorId          Int
+  originalArticleId Int
+
+  Editor          Editor  @relation(fields: [editorId], references: [id], onDelete: Cascade)
+  OriginalArticle Article @relation(fields: [originalArticleId], references: [id], onDelete: Cascade)
+
+  @@unique([editorId, originalArticleId])
+}
+
+enum Language {
+  ENGLISH
+  TAMIL
+  HINDI
+  FRENCH
+  SPANISH
+  GERMAN
+  MANDARIN
+  JAPANESE
+}
+
+enum Style {
+  CATCHY // Attention-grabbing and dramatic
+  HYPED // Very positive and excited tone
+  FLOWERY // Nice descriptions with imagery
+  SIMPLE // Straightforward facts
+  DOUBTFUL // Questioning or skeptical tone
+  GOSSIP // Talking about people or rumors
+  URGENT // Feels important or breaking news
+  SHORT_POEM // Very short poetic style (like haiku)
+  OLD_SCHOOL_DRAMA // Dramatic, old-style language
+  TRAILER // Movie-trailer-like narration
+  MOTIVATING // Energetic, rally-style speech
+  FORMAL // Very official or legal-sounding
+  SMART // Analytical or academic style
+  FUNNY // Sarcastic or humorous tone
+  CASUAL_CHAT // Friendly, relaxed conversation style
+}
+
+enum Verbosity {
+  SUCCINCT // Short and to the point
+  MODERATE // Balanced length
+  ELABORATE // Detailed and expansive
+}
+
+enum WordComplexity {
+  ELEMENTARY // Basic, everyday vocabulary
+  INTERMEDIATE //  More descriptive vocabulary
+  SOPHISTICATED //  Specialized or nuanced terms
 }
