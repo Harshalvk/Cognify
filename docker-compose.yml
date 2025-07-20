@@ -4,7 +4,6 @@ services:
   cognify-db:
     container_name: cognify-db
     image: postgres
-    restart: always
     ports:
       - 1140:5432
     environment:
@@ -16,7 +15,6 @@ services:
   pgadmin:
     container_name: cognify-db_pgadmin
     image: dpage/pgadmin4
-    restart: always
     environment:
       PGADMIN_DEFAULT_EMAIL: admin@email.com
       PGADMIN_DEFAULT_PASSWORD: password
