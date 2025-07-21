@@ -4,15 +4,19 @@ import { headers } from "next/headers";
 import { prisma } from "@/lib/prisma";
 import { Role } from "@/util/types";
 import { authroizeUser } from "./util";
+import { AIService } from "@/ai/ai.service";
 
 export const createTRPCContext = async (opts: { headers: Headers }) => {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
 
+  const ai = new AIService();
+
   return {
     db: prisma,
     session,
+    ai,
     ...opts,
   };
 };
