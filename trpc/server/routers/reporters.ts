@@ -36,4 +36,8 @@ export const reporterRoutes = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       return ctx.db.reporter.delete({ where: { id: input.id } });
     }),
+
+  myArticles: protectedProcedure("reporter", "admin").query(({ ctx }) => {
+    return ctx.db.article.findMany({ where: { reporterId: ctx.userId } });
+  }),
 });
