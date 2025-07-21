@@ -38,18 +38,28 @@ const ReporterSidebar = () => {
                 <SidebarMenuItem>
                   <CollapsibleTrigger asChild>
                     <SidebarMenuButton asChild>
-                      <a href="/my-articles">
+                      <span>
                         <Newspaper />
-                        <span>My Articles</span>
-                      </a>
+                        Articles
+                      </span>
                     </SidebarMenuButton>
                   </CollapsibleTrigger>
                   <CollapsibleContent>
                     <SidebarMenuSub>
                       <SidebarMenuSubItem>
-                        <SidebarMenuButton>
-                          <NotebookPen />
-                          <span>Create Article</span>
+                        <SidebarMenuButton asChild>
+                          <a href="/reporter/my-articles">
+                            <Newspaper />
+                            <span>My Articles</span>
+                          </a>
+                        </SidebarMenuButton>
+                      </SidebarMenuSubItem>
+                      <SidebarMenuSubItem>
+                        <SidebarMenuButton asChild>
+                          <a href="/reporter/my-articles/create-article">
+                            <NotebookPen />
+                            <span>Create Article</span>
+                          </a>
                         </SidebarMenuButton>
                       </SidebarMenuSubItem>
                     </SidebarMenuSub>
