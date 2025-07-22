@@ -46,6 +46,13 @@ export class AIService {
     ]);
   }
 
+  async updateArticle(articleId: number, published: boolean) {
+    await this.pineconeIndex.update({
+      id: articleId.toString(),
+      metadata: { published },
+    });
+  }
+
   private async createEmbedding(content: string) {
     const apiUrl = "https://api.voyageai.com/v1/embeddings";
     const data = {
