@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import {
   EditorCommand,
   EditorCommandEmpty,
@@ -9,36 +9,98 @@ import {
   EditorContent,
   EditorInstance,
   EditorRoot,
-  JSONContent,
 } from "novel";
-import { useState } from "react";
 import { defaultExtensions } from "./extensions";
 import { slashCommand, suggestionItems } from "./slash";
 import { useDebounceCallback } from "usehooks-ts";
+import { trpcClient } from "@/trpc/clients/client";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
+import TagInput from "@/components/Tags";
+import { toast } from "sonner";
 
 const EditorPage = () => {
-  const [content, setContent] = useState<JSONContent | undefined>(undefined);
+  const [title, setTitle] = useState("");
+  const [published, setPublished] = useState(true);
+  const [tags, setTags] = useState<string[]>([]);
+  const [articleId, setArticleId] = useState<number | null>(null);
+
+  const { mutateAsync: createArticle, isPending: isArticleCreationPending } =
+    trpcClient.articles.create.useMutation({
+      onSuccess: (data) => {
+        toast.success(`Article created. ${title}`);
+        setArticleId(data.id);
+      },
+    });
+
+  const { mutateAsync: updateArticle, isPending: isArticleUpdatingPending } =
+    trpcClient.articles.update.useMutation();
 
   const debouncedUpdates = useDebounceCallback(
     async (editor: EditorInstance) => {
       const json = editor.getJSON();
-      setContent(json);
+      if (!articleId) {
+        const data = await createArticle({
+          title,
+          body: JSON.stringify(json),
+          published,
+          tags,
+        });
+        setArticleId(data.id);
+        console.log("Created new article");
+      } else {
+        await updateArticle({
+          articleId,
+          articleData: {
+            title,
+            body: JSON.stringify(json),
+            published,
+            tags,
+          },
+        });
+        console.log("Updated existing article");
+      }
+    },
+    500,
+  );
+
+  const debouncedSetTitle = useDebounceCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setTitle(e.target.value);
     },
     500,
   );
 
   return (
     <section>
-      <div className="py-5 px-11">
-        <input
-          placeholder="Article Title..."
-          className="font-sans focus:outline-none font-semibold text-xl sm:text-3xl placeholder-muted-foreground"
-        />
+      {isArticleCreationPending || isArticleUpdatingPending ? (
+        <p>Saving...</p>
+      ) : (
+        <p>Saved</p>
+      )}
+      <div className="py-5 px-11 w-full space-y-4">
+        <div className="flex w-full justify-between">
+          <input
+            placeholder="Article Title..."
+            className="font-sans focus:outline-none font-semibold text-xl sm:text-3xl placeholder-muted-foreground"
+            onChange={(e) => {
+              debouncedSetTitle(e);
+            }}
+          />
+          <div>
+            <Label htmlFor="publish-switch">Publish</Label>
+            <Switch
+              id="publish-switch"
+              checked={published}
+              onCheckedChange={setPublished}
+            />
+          </div>
+        </div>
+        <TagInput value={tags} onChange={setTags} />
       </div>
       <EditorRoot>
         <EditorContent
           extensions={[...defaultExtensions, slashCommand]}
-          initialContent={content}
           onUpdate={({ editor }) => {
             debouncedUpdates(editor);
           }}
