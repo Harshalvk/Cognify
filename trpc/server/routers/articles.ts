@@ -1,5 +1,6 @@
 import { createArticleSchema } from "@/validator/article.validator";
 import { createTRPCRouter, protectedProcedure } from "..";
+import { z } from "zod";
 
 export const articleRoutes = createTRPCRouter({
   create: protectedProcedure("admin", "reporter")
@@ -19,5 +20,35 @@ export const articleRoutes = createTRPCRouter({
       });
 
       return article;
+    }),
+
+  update: protectedProcedure("admin", "reporter")
+    .input(
+      z.object({ articleId: z.number(), articleData: createArticleSchema }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const summaryLength = 200;
+      const summary = input.articleData.body.substring(0, summaryLength);
+
+      const article = await ctx.db.article.update({
+        where: { id: input.articleId },
+        data: {
+          ...input.articleData,
+          summary,
+          Reporter: { connect: { id: ctx.userId } },
+        },
+      });
+
+      await ctx.ai.updateArticle(article.id, article.published);
+    }),
+
+  getArticleById: protectedProcedure("admin", "reporter")
+    .input(z.object({ articleId: z.number() }))
+    .mutation(async ({ ctx, input }) => {
+      return ctx.db.article.findUnique({
+        where: {
+          id: input.articleId,
+        },
+      });
     }),
 });
