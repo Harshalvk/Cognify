@@ -1,10 +1,17 @@
-import AlertBox from "@/components/AlertBox";
-import { trpcServer } from "@/trpc/clients/server";
-import { AlertTriangle, Newspaper } from "lucide-react";
-import React from "react";
+"use client";
 
-const MyArticlesPage = async () => {
-  const myArticles = await trpcServer.reporters.myArticles.query();
+import React from "react";
+import AlertBox from "@/components/AlertBox";
+import { AlertTriangle, Newspaper } from "lucide-react";
+import { trpcClient } from "@/trpc/clients/client";
+import ArticleCard from "./_components/ArticleCard";
+
+const MyArticlesPage = () => {
+  const { data: myArticles } = trpcClient.reporters.myArticles.useQuery();
+
+  if (!myArticles) {
+    return <p>no articles</p>;
+  }
 
   if (!myArticles.length) {
     return (
@@ -22,7 +29,13 @@ const MyArticlesPage = async () => {
     );
   }
 
-  return <div></div>;
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
+      {myArticles.map((article) => (
+        <ArticleCard article={article} key={article.id} />
+      ))}
+    </div>
+  );
 };
 
 export default MyArticlesPage;
