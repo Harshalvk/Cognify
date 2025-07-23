@@ -53,6 +53,38 @@ export class AIService {
     });
   }
 
+  async userRecommendations({
+    id,
+  }: {
+    id: string;
+  }): Promise<{ id: string; score: number }[]> {
+    const { records } = await this.pineconeIndex.fetch([id]);
+
+    const userRecord = records[id];
+
+    if (!userRecord.values) {
+      console.log("userRecord", userRecord);
+      console.error("User record not found");
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "User record not found",
+      });
+    }
+
+    const queryResponse = await this.pineconeIndex.query({
+      topK: 10,
+      vector: userRecord.values,
+      includeMetadata: false,
+      includeValues: false,
+      filter: { type: "article", published: true },
+    });
+
+    return queryResponse.matches.map(({ id, score }) => ({
+      id,
+      score: score || 0,
+    }));
+  }
+
   private async createEmbedding(content: string) {
     const apiUrl = "https://api.voyageai.com/v1/embeddings";
     const data = {

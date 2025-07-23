@@ -51,4 +51,42 @@ export const articleRoutes = createTRPCRouter({
         },
       });
     }),
+
+  userRecommendations: protectedProcedure().query(async ({ ctx }) => {
+    const { ai, db, userId } = ctx;
+    const related = await ai.userRecommendations({ id: userId });
+
+    const articleIds = related.map((article) => +article.id);
+
+    const articles = await db.article.findMany({
+      where: {
+        id: {
+          in: articleIds,
+        },
+      },
+      select: {
+        title: true,
+        createdAt: true,
+        id: true,
+        tags: true,
+        summary: true,
+      },
+    });
+
+    type RelatedArticle = (typeof articles)[0];
+
+    const articlesWithScores = related
+      .map(({ id, score }) => {
+        const article = articles.find((article) => article.id === +id);
+        if (article) {
+          return { score, article };
+        }
+      })
+      .filter(
+        (article): article is { article: RelatedArticle; score: number } =>
+          !!article,
+      );
+
+    return articlesWithScores;
+  }),
 });
