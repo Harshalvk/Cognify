@@ -5,15 +5,23 @@ import AlertBox from "@/components/AlertBox";
 import { AlertTriangle, Newspaper } from "lucide-react";
 import { trpcClient } from "@/trpc/clients/client";
 import ArticleCard from "./_components/ArticleCard";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const MyArticlesPage = () => {
-  const { data: myArticles } = trpcClient.reporters.myArticles.useQuery();
+  const { data: myArticles, isLoading } =
+    trpcClient.reporters.myArticles.useQuery();
 
-  if (!myArticles) {
-    return <p>no articles</p>;
+  if (isLoading) {
+    return (
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 p-3">
+        <Skeleton className="w-full h-40 rounded-xl" />
+        <Skeleton className="w-full h-40 rounded-xl" />
+        <Skeleton className="w-full h-40 rounded-xl" />
+      </div>
+    );
   }
 
-  if (!myArticles.length) {
+  if (myArticles === undefined) {
     return (
       <AlertBox
         text="No Articles"
@@ -28,11 +36,12 @@ const MyArticlesPage = () => {
       </AlertBox>
     );
   }
-
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
+    <div className="p-3 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
       {myArticles.map((article) => (
-        <ArticleCard article={article} key={article.id} />
+        <div key={article.id}>
+          <ArticleCard article={article} />
+        </div>
       ))}
     </div>
   );
