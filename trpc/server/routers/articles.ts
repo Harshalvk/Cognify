@@ -1,6 +1,8 @@
 import { createArticleSchema } from "@/validator/article.validator";
 import { createTRPCRouter, protectedProcedure } from "..";
 import { z } from "zod";
+import { fetchAndScoreRelatedArticles } from "./shared/articles";
+import { numberIdSchema } from "@/validator/feedback.validator";
 
 export const articleRoutes = createTRPCRouter({
   create: protectedProcedure("admin", "reporter")
@@ -54,39 +56,13 @@ export const articleRoutes = createTRPCRouter({
 
   userRecommendations: protectedProcedure().query(async ({ ctx }) => {
     const { ai, db, userId } = ctx;
-    const related = await ai.userRecommendations({ id: userId });
-
-    const articleIds = related.map((article) => +article.id);
-
-    const articles = await db.article.findMany({
-      where: {
-        id: {
-          in: articleIds,
-        },
-      },
-      select: {
-        title: true,
-        createdAt: true,
-        id: true,
-        tags: true,
-        summary: true,
-      },
-    });
-
-    type RelatedArticle = (typeof articles)[0];
-
-    const articlesWithScores = related
-      .map(({ id, score }) => {
-        const article = articles.find((article) => article.id === +id);
-        if (article) {
-          return { score, article };
-        }
-      })
-      .filter(
-        (article): article is { article: RelatedArticle; score: number } =>
-          !!article,
-      );
-
-    return articlesWithScores;
+    return fetchAndScoreRelatedArticles({ ai, db, id: userId });
   }),
+
+  moreLikeThis: protectedProcedure()
+    .input(numberIdSchema)
+    .query(async ({ ctx, input: { id } }) => {
+      const { ai, db } = ctx;
+      return fetchAndScoreRelatedArticles({ ai, db, id: id.toString() });
+    }),
 });
