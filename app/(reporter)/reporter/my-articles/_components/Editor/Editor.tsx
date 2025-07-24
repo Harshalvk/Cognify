@@ -82,7 +82,7 @@ const EditorPage = () => {
         <div className="flex w-full justify-between">
           <input
             placeholder="Article Title..."
-            className="font-sans focus:outline-none font-semibold text-xl sm:text-3xl placeholder-muted-foreground"
+            className="font-sans focus:outline-none font-semibold text-xl sm:text-3xl placeholder-muted-foreground w-full"
             onChange={(e) => {
               debouncedSetTitle(e);
             }}

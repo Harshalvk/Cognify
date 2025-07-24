@@ -21,15 +21,32 @@ const ArticleOptions = ({
   article,
   ...props
 }: ArticleOptionsProps) => {
+  const utils = trpcClient.useUtils();
+
   const { mutateAsync: updateArticle } = trpcClient.articles.update.useMutation(
     {
       onSuccess: () => {
-        toast.success("Article unpublished", { id: "updating-article-status" });
+        if (article.published) {
+          toast.success("Article unpublished", {
+            id: "updating-article-status",
+          });
+        } else {
+          toast.success("Article published", {
+            id: "updating-article-status",
+          });
+        }
+        utils.reporters.myArticles.invalidate();
       },
       onMutate: () => {
-        toast.loading("Unpublishing article", {
-          id: "updating-article-status",
-        });
+        if (article.published) {
+          toast.loading("Unpublishing article", {
+            id: "updating-article-status",
+          });
+        } else {
+          toast.loading("Publishing article", {
+            id: "updating-article-status",
+          });
+        }
       },
       onError: () => {
         toast.error("Something went wrong", { id: "updating-article-status" });

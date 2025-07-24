@@ -1,6 +1,6 @@
 import { trpcServer } from "@/trpc/clients/server";
 import React from "react";
-import ArticlePageContent from "./ArticlePageContent";
+import ArticlePageContent from "../../../../../components/ArticlePageContent";
 
 const ArticlePage = async ({ params }: { params: { articleId: string } }) => {
   const article = await trpcServer.articles.getArticleById.mutate({

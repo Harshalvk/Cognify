@@ -22,7 +22,7 @@ const ArticleCard = ({ article }: IArticleCardSimpleProps) => {
         <CardHeader>
           <CardTitle className="text-xl sm:text-2xl">{article.title}</CardTitle>
           <CardDescription>
-            <div className="flex gap-1">
+            <div className="flex gap-1 flex-wrap">
               {article.tags.map((tag) => (
                 <Badge className="rounded-full" key={tag}>
                   {tag}
