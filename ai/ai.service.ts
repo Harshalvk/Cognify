@@ -2,6 +2,7 @@ import { Index, Pinecone, RecordMetadata } from "@pinecone-database/pinecone";
 import { INDEX_NAME } from "./constants";
 import { TRPCError } from "@trpc/server";
 import { RouterOutputs } from "@/trpc/clients/types";
+import { FeedbackType } from "@prisma/client";
 
 export class AIService {
   private readonly pineconeIndex: Index<RecordMetadata>;
@@ -59,7 +60,6 @@ export class AIService {
     id: string;
   }): Promise<{ id: string; score: number }[]> {
     const { records } = await this.pineconeIndex.fetch([id]);
-
     const userRecord = records[id];
 
     if (!userRecord.values) {
@@ -84,6 +84,56 @@ export class AIService {
       score: score || 0,
     }));
   }
+
+  async giveFeedback({
+    uid,
+    articleId,
+    type,
+  }: {
+    uid: string;
+    articleId: number;
+    type: FeedbackType;
+  }) {
+    const { records } = await this.pineconeIndex.fetch([
+      uid,
+      articleId.toString(),
+    ]);
+    const userRecord = records[uid];
+    const articleRecord = records[articleId];
+
+    if (!userRecord || !articleRecord) {
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "User or artile vector not found",
+      });
+    }
+
+    const userVector = userRecord.values;
+    const articleVector = articleRecord.values;
+
+    if (!articleVector) {
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "Article vector is undefined",
+      });
+    }
+
+    const adjustmentScale = this.adjustmentScales[type];
+
+    const newUserVector = userVector?.map(
+      (value, index) =>
+        value + adjustmentScale * (articleVector[index] - value),
+    );
+
+    await this.pineconeIndex.upsert([{ id: uid, values: newUserVector }]);
+  }
+
+  private adjustmentScales: { [key: string]: number } = {
+    [FeedbackType.LOVE]: 0.3,
+    [FeedbackType.LIKE]: 0.15,
+    [FeedbackType.DISLIKE]: -0.15,
+    [FeedbackType.HATE]: -0.3,
+  };
 
   private async createEmbedding(content: string) {
     const apiUrl = "https://api.voyageai.com/v1/embeddings";
