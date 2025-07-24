@@ -9,7 +9,7 @@ import ArticleCard from "./_components/ArticleCard";
 const ArticlesPage = () => {
   const {
     data: articles,
-    isFetching,
+    isLoading,
     error,
   } = trpcClient.articles.userRecommendations.useQuery();
 
@@ -19,7 +19,9 @@ const ArticlesPage = () => {
     }
   }, [error]);
 
-  if (isFetching) {
+  console.log(articles);
+
+  if (isLoading) {
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 p-3 gap-3">
         <Skeleton className="h-40 w-full" />
