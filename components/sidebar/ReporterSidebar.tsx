@@ -16,7 +16,8 @@ import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from "./ui/collapsible";
+} from "../ui/collapsible";
+import Link from "next/link";
 
 const ReporterSidebar = () => {
   return (
@@ -28,10 +29,10 @@ const ReporterSidebar = () => {
             <SidebarMenu>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
-                  <a href={"/dashboard"}>
+                  <Link href={"/dashboard"}>
                     <Home />
                     <span>Dashboard</span>
-                  </a>
+                  </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <Collapsible defaultOpen className="group/collapsible">
@@ -48,18 +49,18 @@ const ReporterSidebar = () => {
                     <SidebarMenuSub>
                       <SidebarMenuSubItem>
                         <SidebarMenuButton asChild>
-                          <a href="/reporter/my-articles">
+                          <Link href="/reporter/my-articles">
                             <Newspaper />
                             <span>My Articles</span>
-                          </a>
+                          </Link>
                         </SidebarMenuButton>
                       </SidebarMenuSubItem>
                       <SidebarMenuSubItem>
                         <SidebarMenuButton asChild>
-                          <a href="/reporter/my-articles/create-article">
+                          <Link href="/reporter/my-articles/create-article">
                             <NotebookPen />
                             <span>Create Article</span>
-                          </a>
+                          </Link>
                         </SidebarMenuButton>
                       </SidebarMenuSubItem>
                     </SidebarMenuSub>
