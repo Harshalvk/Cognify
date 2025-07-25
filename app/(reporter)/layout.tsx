@@ -1,5 +1,5 @@
 import { ModeToggle } from "@/components/ModeToggle";
-import ReporterSidebar from "@/components/ReporterSidebar";
+import ReporterSidebar from "@/components/sidebar/ReporterSidebar";
 import TellThem from "@/components/TellThem";
 import { Separator } from "@/components/ui/separator";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
