@@ -3,7 +3,12 @@ import { BaseComponent } from "@/util/types";
 
 export const Title = ({ children, className }: BaseComponent) => {
   return (
-    <div className={cn("text-xl font-semibold capitalize mb-2", className)}>
+    <div
+      className={cn(
+        "text-xl sm:text-2xl md:text-3xl font-semibold capitalize mb-2",
+        className,
+      )}
+    >
       {children}
     </div>
   );
