@@ -22,32 +22,32 @@ import Link from "next/link";
 const items = [
   {
     title: "Dashboard",
-    url: "/dashboard",
+    url: "/admin/dashboard",
     icon: Home,
   },
   {
     title: "Admins",
-    url: "/admin",
+    url: "/admin/manage-admins",
     icon: ShieldUser,
   },
   {
     title: "Reporters",
-    url: "/reporter",
+    url: "/admin/manage-reporters",
     icon: MessageSquareShare,
   },
   {
     title: "Articles",
-    url: "#",
+    url: "/admin/articles",
     icon: Newspaper,
   },
   {
     title: "Users",
-    url: "#",
+    url: "/admin/users",
     icon: User2,
   },
   {
     title: "Editors",
-    url: "#",
+    url: "/admin/editors",
     icon: Edit,
   },
 ];
