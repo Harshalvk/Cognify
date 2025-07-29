@@ -11,7 +11,7 @@ import {
   SidebarMenuSub,
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
-import { Home, Newspaper, NotebookPen } from "lucide-react";
+import { Bot, Home, Newspaper, NotebookPen } from "lucide-react";
 import {
   Collapsible,
   CollapsibleContent,
@@ -65,6 +65,12 @@ const ReporterSidebar = () => {
                       </SidebarMenuSubItem>
                     </SidebarMenuSub>
                   </CollapsibleContent>
+                  <SidebarMenuButton asChild>
+                    <Link href={"/reporter/editors"}>
+                      <Bot />
+                      Editors
+                    </Link>
+                  </SidebarMenuButton>
                 </SidebarMenuItem>
               </Collapsible>
             </SidebarMenu>
