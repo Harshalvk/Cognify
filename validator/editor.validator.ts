@@ -7,6 +7,6 @@ export const createEditorSchema = z.object({
   language: z.enum(Language),
   verbosity: z.enum(Verbosity),
   wordComplexity: z.enum(WordComplexity),
-  notes: z.string().max(300, { message: "Max 300 characters" }),
-  editorImage: z.string(),
+  additionalNotes: z.string().max(300, { message: "Max 300 characters" }),
+  editorImage: z.string().optional().nullable(),
 });
