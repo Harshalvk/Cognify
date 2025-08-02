@@ -164,7 +164,7 @@ model Editor {
   updateAt  DateTime @updatedAt
 
   name           String
-  imagePublicId  String?
+  editorImage    String?
   language       Language       @default(ENGLISH)
   style          Style
   verbosity      Verbosity
