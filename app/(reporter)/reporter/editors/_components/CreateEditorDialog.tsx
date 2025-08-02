@@ -21,7 +21,7 @@ import { $Enums } from "@prisma/client";
 import React, { useState } from "react";
 import { Controller } from "react-hook-form";
 
-const CreateEditor = () => {
+const CreateEditorDialog = () => {
   const [open, setOpen] = useState(true);
 
   const { register, handleSubmit, control } = useFormCreateEditor();
@@ -31,7 +31,7 @@ const CreateEditor = () => {
       <DialogTrigger asChild>
         <Button>Create Editor</Button>
       </DialogTrigger>
-      <DialogContent className="w-[800px] max-w-full">
+      <DialogContent className="w-[1700px]">
         <DialogTitle className="text-2xl font-semibold mb-4">
           Create New Editor
         </DialogTitle>
@@ -45,7 +45,6 @@ const CreateEditor = () => {
           <div className="space-y-2">
             <Input placeholder="Editor Name" {...register("name")} />
           </div>
-
           <div className="grid grid-cols-2 gap-4">
             <Controller
               name="language"
@@ -65,7 +64,6 @@ const CreateEditor = () => {
                 </Select>
               )}
             />
-
             <Controller
               name="style"
               control={control}
@@ -84,7 +82,6 @@ const CreateEditor = () => {
                 </Select>
               )}
             />
-
             <Controller
               name="verbosity"
               control={control}
@@ -103,7 +100,6 @@ const CreateEditor = () => {
                 </Select>
               )}
             />
-
             <Controller
               name="wordComplexity"
               control={control}
@@ -127,27 +123,16 @@ const CreateEditor = () => {
               )}
             />
           </div>
+          <Textarea placeholder="Note" {...register("additionalNotes")} />
+          <Input type="file" />
 
-          <div className="space-y-2">
-            <Input
-              placeholder="Editor Image URL"
-              {...register("editorImage")}
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Textarea placeholder="Note" {...register("notes")} />
-          </div>
-
-          <div className="pt-2">
-            <Button type="submit" className="w-full">
-              Create
-            </Button>
-          </div>
+          <Button type="submit" className="w-full">
+            Create
+          </Button>
         </form>
       </DialogContent>
     </Dialog>
   );
 };
 
-export default CreateEditor;
+export default CreateEditorDialog;

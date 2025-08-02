@@ -1,13 +1,5 @@
-import React from "react";
-import CreateEditor from "./_components/CreateEditor";
-
 const ReporterEditorPage = () => {
-  return (
-    <div>
-      Reporters Editor Page
-      <CreateEditor />
-    </div>
-  );
+  return <div>Reportes editor page</div>;
 };
 
 export default ReporterEditorPage;
